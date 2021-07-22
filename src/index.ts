@@ -15,6 +15,11 @@ const crawl = async ({ url }) => {
   const links = $('a')
     .map((i, link) => link.attribs.href)
     .get();
+
+  const images = $('img')
+    .map((i, img) => img.attribs.src)
+    .get();
+
   links.forEach((link) => {
     crawl({
       url: getUrl(link),
