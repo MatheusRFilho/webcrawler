@@ -1,6 +1,7 @@
 import * as fetch from 'node-fetch';
 import * as cherrio from 'cheerio';
 import * as fs from 'fs';
+import * as path from 'path';
 
 const seenUrl = {};
 const crawl = async ({ url }) => {
@@ -23,7 +24,8 @@ const crawl = async ({ url }) => {
 
   imagesUrls.forEach((imagesUrl) => {
     fetch(getUrl(imagesUrl)).then((response) => {
-      const dest = fs.createWriteStream('images/myimages.jpg');
+      const fileName = path.basename(imagesUrl);
+      const dest = fs.createWriteStream(`images/${fileName}`);
       response.body.pipe(dest);
     });
   });
