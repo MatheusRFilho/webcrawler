@@ -1,5 +1,6 @@
 import * as fetch from 'node-fetch';
 import * as cherrio from 'cheerio';
+import * as fs from 'fs';
 
 const seenUrl = {};
 const crawl = async ({ url }) => {
@@ -16,9 +17,16 @@ const crawl = async ({ url }) => {
     .map((i, link) => link.attribs.href)
     .get();
 
-  const images = $('img')
+  const imagesUrls = $('img')
     .map((i, img) => img.attribs.src)
     .get();
+
+  imagesUrls.forEach((imagesUrl) => {
+    fetch(getUrl(imagesUrl)).then((response) => {
+      const dest = fs.createWriteStream('images/myimages.jpg');
+      response.body.pipe(dest);
+    });
+  });
 
   links.forEach((link) => {
     crawl({
