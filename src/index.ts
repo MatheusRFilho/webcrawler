@@ -22,17 +22,7 @@ const crawl = async ({ url, ignore }) => {
     .map((i, link) => link.attribs.href)
     .get();
 
-  const imagesUrls = $('img')
-    .map((i, img) => img.attribs.src)
-    .get();
-
-  imagesUrls.forEach((imagesUrl) => {
-    fetch(getUrl(imagesUrl, host, protocol)).then((response) => {
-      const fileName = path.basename(imagesUrl);
-      const dest = fs.createWriteStream(`images/${fileName}`);
-      response.body.pipe(dest);
-    });
-  });
+  downloadImages($, host, protocol);
 
   links
     .filter((link) => link.includes(host) && !link.includes(ignore))
@@ -52,6 +42,20 @@ const getUrl = (link, host, protocol) => {
   } else {
     return `${protocol}//${host}/${link}`;
   }
+};
+
+const downloadImages = ($, host, protocol) => {
+  const imagesUrls = $('img')
+    .map((i, img) => img.attribs.src)
+    .get();
+
+  imagesUrls.forEach((imagesUrl) => {
+    fetch(getUrl(imagesUrl, host, protocol)).then((response) => {
+      const fileName = path.basename(imagesUrl);
+      const dest = fs.createWriteStream(`images/${fileName}`);
+      response.body.pipe(dest);
+    });
+  });
 };
 
 crawl({ url: 'http://stevescooking.blogspot.com/', ignore: '/search' });
