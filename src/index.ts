@@ -42,8 +42,6 @@ const crawl = async ({ url, ignore }) => {
         ignore,
       });
     });
-
-  return true;
 };
 
 const getUrl = (link, host, protocol) => {
